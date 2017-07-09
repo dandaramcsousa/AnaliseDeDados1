@@ -52,7 +52,7 @@ series_cw %>%
 
 **Pergunta 1. Qual das séries que você escolheu é mais bem avaliada no IMDB? A diferença é grande? Pequena?**
 ```{r echo = FALSE, message= FALSE} 
-series_cw %>%
+avaliacao = series_cw %>%
   ggplot(aes(x = Nome,y = Nota)) + 
   geom_boxplot() + 
   labs(x= "Nome da Série", y= "Nota do Usuário", title = "Avaliações de séries") + 
@@ -61,7 +61,7 @@ series_cw %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_y_continuous(breaks=seq(0, 10, 1)) +
   theme_bw()
-#ggplotly(avaliacao, width = 1000,height = 500)
+ggplotly(avaliacao, width = 1000,height = 500)
 
 ```
 
@@ -73,7 +73,7 @@ Considerando a série mais antiga como a que possui mais temporada e a mais nova
 
 **Pergunta 3. As notas crescem de acordo com a temporada?**
 ```{r echo = FALSE, message= FALSE}
-series_cw %>%
+cresc = series_cw %>%
   group_by(Nome,Temporada) %>%
   summarise(Mediana = median(Nota)) %>%
   ggplot(aes(x = Temporada,y = Mediana, color = Nome)) + 
@@ -84,6 +84,8 @@ series_cw %>%
   labs(x = "Temporada",y = "Mediana", title = "Notas por temporada") +
   theme_bw() +
   theme(legend.position = "bottom")
+
+ggplotly(cresc, width = 1000,height = 500)
 ```
 
 De forma geral é possível perceber que apenas Supernatural e The Originals caíram de nota na última temporada. Supernatural teve sua nota quase igualada à de sua décima temporada e The Originals com a de sua segunda. Podemos considerar então a temporada antecedente da última como picos em avaliações. E a partir daí dizer que não há um padrão de crescimento mas as séries que ainda estão sendo produzidas não possuem sequências de quedas de avaliação significante.

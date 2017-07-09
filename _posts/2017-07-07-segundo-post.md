@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Atividade 2
-date: 2017-07-08 22:48:03
+date: 2017-07-09 15:45:01
 author: Dandara
 published: true
 tags: [htmlwidgets, r]
