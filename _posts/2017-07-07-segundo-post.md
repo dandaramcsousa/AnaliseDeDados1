@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  Atividade 2
-date: 2017-07-09 15:45:01
+title:  Atividade 2 - Revisitando uma visualização
+date: 2017-07-09 16:18:28
 author: Dandara
 published: true
 tags: [htmlwidgets, r]
@@ -31,10 +31,10 @@ As atuais séries da CW e suas temporadas são:
 ## Warning: package 'bindrcpp' was built under R version 3.3.3
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-3](/figure/source/segunda-postagem/2017-07-07-segundo-post/unnamed-chunk-3-1.png)
+![plot of chunk unnamed-chunk-3](/AnaliseDeDados1/figure/source/segunda-postagem/2017-07-07-segundo-post/unnamed-chunk-3-1.png)
 
 **Pergunta 1. Qual das séries que você escolheu é mais bem avaliada no IMDB? A diferença é grande? Pequena?**
-![plot of chunk unnamed-chunk-4](/figure/source/segunda-postagem/2017-07-07-segundo-post/unnamed-chunk-4-1.png)
+![plot of chunk unnamed-chunk-4](/AnaliseDeDados1/figure/source/segunda-postagem/2017-07-07-segundo-post/unnamed-chunk-4-1.png)
 
 A partir do bloxplot com a mediana de cada série pode-se observar que, de forma geral,The Originals é a série mais bem avaliada no IMDB. Porém a maior nota foi dada para um episódio em Arrow. A segunda e terceira série mais bem avaliada respectivamente são Supernatural e Arrow.
 
@@ -43,6 +43,6 @@ A partir do bloxplot com a mediana de cada série pode-se observar que, de forma
 Considerando a série mais antiga como a que possui mais temporada e a mais nova como a que possui menos, Supernatural é a série mais antiga em exibição na CW enquanto Crazy Ex-Girlfriend é a mais nova. A partir do boxplot mostrado acima (*Avaliações de Série*) é possível observar que a avaliação de Supernatural é maior que a série mais jovem. Isso pode indicar que os fãs da série são tão assíduos que a produtora não vê a necessidade de cancelar a série. 
 
 **Pergunta 3. As notas crescem de acordo com a temporada?**
-![plot of chunk unnamed-chunk-5](/figure/source/segunda-postagem/2017-07-07-segundo-post/unnamed-chunk-5-1.png)
+![plot of chunk unnamed-chunk-5](/AnaliseDeDados1/figure/source/segunda-postagem/2017-07-07-segundo-post/unnamed-chunk-5-1.png)
 
 De forma geral é possível perceber que apenas Supernatural e The Originals caíram de nota na última temporada. Supernatural teve sua nota quase igualada à de sua décima temporada e The Originals com a de sua segunda. Podemos considerar então a temporada antecedente da última como picos em avaliações. E a partir daí dizer que não há um padrão de crescimento mas as séries que ainda estão sendo produzidas não possuem sequências de quedas de avaliação significante.

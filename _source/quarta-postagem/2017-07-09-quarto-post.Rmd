@@ -1,0 +1,187 @@
+---
+layout: post
+title:  Atividade 3 - Agrupamento em duas dimensões
+date: `r Sys.time()`
+author: Dandara
+published: true
+tags: [htmlwidgets, r]
+---
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+ 
+```{r include=FALSE, warning=FALSE}
+library(tidyverse, warn.conflicts = F)
+library(rvest)
+library(plotly)
+library(cluster)
+library(ggdendro)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(readr)
+library(knitr)
+source("plota_solucoes_hclust.R")
+```
+**Tipos de filme de Jim Carrey**
+
+Nessa página analisaremos os filmes feitos por Jim Carrey utilizando os dados do [Rotten Tomataoes](https://www.rottentomatoes.com/).A ideia é agrupar para encontrar padrões nos filmes analisando a bilheteria e a avaliação do público. Os dados após serem extraídos foram limpos e organizados em um tibble. Os filmes são:
+
+```{r echo = FALSE, warning=FALSE, message=FALSE}
+from_page <- read_html("https://www.rottentomatoes.com/celebrity/jim_carrey") %>% 
+    html_node("#filmographyTbl") %>% # A sintaxe da expressão é de um seletor à lá JQuery: https://rdrr.io/cran/rvest/man/html_nodes.html 
+    html_table(fill=TRUE) %>% # Faz parse
+    as_tibble()
+
+filmes = from_page %>% 
+    filter(RATING != "No Score Yet", 
+           `BOX OFFICE` != "—", 
+           CREDIT != "Executive Producer") %>%
+    mutate(RATING = as.numeric(gsub("%", "", RATING)), 
+           `BOX OFFICE` = as.numeric(gsub("[$|M]", "", `BOX OFFICE`))) %>% 
+    filter(`BOX OFFICE` >= 1) # Tem dois filmes que não parecem ter sido lançados no mundo todo
+
+names(filmes)[names(filmes)=="RATING"] <- "Avaliacao"
+names(filmes)[names(filmes)=="BOX OFFICE"] <- "Bilheteria"
+
+unique(filmes$TITLE)
+
+```
+
+
+
+**Sobre agrupamento**
+
+Agrupar é uma forma de observar as semelhanças num conjunto de dados. Os grupos são feitos por elementos que possuem mais algo em comum com os outros elementos do grupo do que com os que estão fora. 
+
+Primeiramente, analisaremos os possíveis grupos pela **bilheteria** (box office) do filme de forma logarítimica que mostra melhor as informações de maior volume, sem focar tanto nos extremos.
+
+```{r warning=FALSE, message=FALSE}
+filmes %>% 
+    ggplot(aes(x = `Bilheteria`)) + 
+    geom_histogram(bins = 20, fill= '#20289b') + 
+    scale_x_log10() + 
+    geom_rug()
+
+```
+
+Através desse gráfico observamos claramente quatro grupos de valores de bilheteria, ou seja, os filmes quando analisados pela bilheteria se concentram em quatro partes.
+
+Agora, analisando a **avaliação** do público, temos:
+
+```{r warning=FALSE, message=FALSE}
+filmes %>% 
+    ggplot(aes(x = Avaliacao)) + 
+    geom_histogram(bins = 16, fill = '#20289b') + 
+    geom_rug()
+
+```
+
+Visualmente é fácil perceber que há cinco montantes de valores indicando a porcentagem de aprovação de cada filme.
+
+**Agrupamento em duas dimensões**
+
+Observaremos agora que agrupando as duas dimensões (x como avaliação e y como bilheteria) temos a seguinte relação para os filmes:
+
+```{r warning=FALSE, message=FALSE}
+p = filmes %>% 
+    ggplot(aes(x = Avaliacao, y = `Bilheteria`, color = TITLE)) + 
+    geom_point() + theme(legend.position = "none") + scale_y_log10() 
+ggplotly(p, width = 1000,height = 500)
+
+```
+
+
+Fazendo o agrupamento pelo dendrograma, observamos o que a o espaço na largura indica a dissimilaridade dos pontos. Ou seja, quanto maior o espaço menos chances há dos subgrupos estarem relacionados.Traçamos, então, uma linhha onde os espaços se tornar muito grandes e mostra que possivelmente esse é o melhor número de grupos para se trabalhar. No nosso caso, como visto abaixo, quatro.
+
+```{r warning=FALSE, message=FALSE}
+agrupamento_h_2d = filmes %>% 
+    column_to_rownames("TITLE") %>%
+    select(Avaliacao, Bilheteria) %>%
+    dist(method = "euclidean") %>% 
+    hclust(method = "centroid")
+
+ggdendrogram(agrupamento_h_2d, rotate = TRUE) + geom_hline(yintercept = 41, colour = "red")
+
+```
+
+A partir disso, então, veremos os possíveis agrupamentos para decidir se realmente 4 é um bom número. Vale lembrar que o agrupamento utilizado é aglomerativo e nem sempre o resultado obtido é o melhor possível.
+
+```{r warning=FALSE, message=FALSE}
+agrupamento_h_2d = filmes %>% 
+    column_to_rownames("TITLE") %>%
+    select(Avaliacao, `Bilheteria`) %>% 
+    mutate(`Bilheteria` = log10(`Bilheteria`)) %>% 
+    mutate_all(funs(scale)) %>% 
+    dist(method = "euclidean") %>% 
+    hclust(method = "centroid")
+
+ggdendrogram(agrupamento_h_2d, rotate = TRUE)
+
+filmes2 = filmes %>% mutate(`Bilheteria` = log10(`Bilheteria`))
+plota_hclusts_2d(agrupamento_h_2d, 
+                 filmes2, 
+                 c("Avaliacao", "`Bilheteria`"), 'TITLE',
+                 linkage_method = "ward.D", ks = 1:6) + scale_y_log10()
+```
+
+
+Analisamos também a distância entre os pontos de um grupo, para reafirmar a melhor opção. Quantos mais próximo de 1 mais próximo do seu próprio grupo um ponto está.
+
+Primeiro, observando 3 grupos:
+```{r warning=FALSE, message=FALSE}
+distancias = filmes %>% 
+    column_to_rownames("TITLE") %>%
+    select(Avaliacao, `Bilheteria`) %>% 
+    mutate(`Bilheteria` = log10(`Bilheteria`)) %>% 
+    mutate_all(funs(scale)) %>% 
+    dist(method = "euclidean")
+
+colour = RColorBrewer::brewer.pal(3, "Set2")
+
+plot(silhouette(cutree(agrupamento_h_2d, k = 3), distancias), col = colour, border = NA)
+
+```
+
+Agora, observando 4 grupos:
+
+```{r warning=FALSE, message=FALSE}
+distancias = filmes %>% 
+    column_to_rownames("TITLE") %>%
+    select(Avaliacao, `Bilheteria`) %>% 
+    mutate(`Bilheteria` = log10(`Bilheteria`)) %>% 
+    mutate_all(funs(scale)) %>% 
+    dist(method = "euclidean")
+colourq = RColorBrewer::brewer.pal(4, "Set2")
+
+plot(silhouette(cutree(agrupamento_h_2d, k = 4), distancias),col = colourq, border = NA)
+
+```
+
+A partir daí, é fácil observar que 4 é realmente o melhor número de grupos e podemos observar melhor estes grupos:
+
+```{r warning=FALSE, message=FALSE}
+names(filmes)[names(filmes)=="Bilheteria"] <- "LogBilheteria"
+
+filmes2 = filmes %>% mutate(LogBilheteria = log10(LogBilheteria))
+
+grupos_q <- plota_hclusts_2d(agrupamento_h_2d, 
+                 filmes2, 
+                 c("Avaliacao", "LogBilheteria"),
+                 'TITLE', 
+                 linkage_method = "ward.D", ks = 4) + scale_y_log10()
+
+
+ggplotly(grupos_q, width = 800, height = 500) 
+```
+
+
+1. O primeiro podemos definir como o de renda pequena e avaliação pequena, ou seja, os filmes que foram pouco vistos e foram considerados ruins pelo público. *The Number 23* é o filme de maior bilheteria nesse grupo e, ainda assim, foi o pior avaliado.
+
+2. O segundo grupo é o de bilheteria alta. É o que tem a faixa de avaliação mais dispersa, por exemplo temos *Fun With Dick and Jane* que obteve cerca de 29% na avaliação e também *Dr Seuss' Horton Hears a Who!* que obteve 79% de aprovação. O que eles tem em comum é, na verdade a bilheteria próximo/acima de 100.
+
+3. O terceiro como o de bilheteria baixa e com avaliação mediana é formado apenas por *I Love You Philip Morris*.
+
+4. O último como o filme de bilheteria média mas com uma avaliação ótima é formado por *Under the Sea 3D* e *Eternal Sunshine Of The Spotless Mind* que tiveram avaliações parecidas,94% e 92% respectivamente.

@@ -2,13 +2,12 @@
 title: Análise de Dados
 email: dandara.sousa@ccc.ufcg.edu.br
 description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+  Um blog para expor as análises feitas da disciplina de Análise de Dados 1 2017.1 em Computação - UFCG.
+url: "https://dandaramcsousa.github.io/AnaliseDeDados1/" # the base hostname & protocol for your site
 twitter_username: d4ndara
 github_username:  dandaramcsousa
 permalink: /:year/:month/:title.html
+baseurl: /AnaliseDeDados1/
 
 # Build settings
 markdown: kramdown

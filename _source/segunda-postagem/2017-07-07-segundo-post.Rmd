@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Atividade 2
+title:  Atividade 2 - Revisitando uma visualização
 date: `r Sys.time()`
 author: Dandara
 published: true

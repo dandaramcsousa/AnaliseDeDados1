@@ -1,0 +1,11 @@
+---
+layout: post
+title:  Atividade 2 - Uma visualização interativa
+date: `r Sys.time()`
+author: Dandara
+published: true
+tags: [htmlwidgets, r]
+---
+
+
+Você pode acessar essa análise [aqui](https://dandaramcs.shinyapps.io/atividade2/).
