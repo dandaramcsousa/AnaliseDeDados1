@@ -1,0 +1,89 @@
+---
+title: "Atividade 2 - Checkpoint 1"
+author: "Dandara Sousa"
+date: "4 de junho de 2017"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(knitr)
+library(plotly)
+series = read.csv("series_from_imdb.csv")
+```
+
+Para esta análise foi utilizada um conjunto de dados de séries avaliadas no IMDB. Nele está contido informações de nome da série, nome e número do episódio, a url onde está hospedado o episódio no IMDB, a nota do usuário, o número de votos e a quantidade de votos que cada uma das notas receberam.
+```{r echo = FALSE}
+  colnames(series)
+```
+</br>Nesta análise nem todas as informações de uma série serão utilizadas. O foco será principalmente nas avaliações com base em votações dos usuários do IMDB feitas para séries da [produtora CW](https://en.wikipedia.org/wiki/The_CW).
+
+###Análise de séries CW em exibição
+As atuais séries da CW e suas temporadas são:
+
+```{r echo = FALSE}
+series_cw = series %>% filter(series_name %in% c("Supernatural","Arrow","The Originals","Reign","The 100","The Flash","iZombie","Legends of Tomorrow","Supergirl","Riverdale","Jane the Virgin","Crazy Ex-Girlfriend","Whose Line Is It Anyway?","Penn & Teller: Fool Us","Masters of Illusion","The Robert Irvine Show"))
+
+names(series_cw)[names(series_cw) == "season"]<- "Temporada"
+names(series_cw)[names(series_cw) == "series_name"]<- "Nome"
+names(series_cw)[names(series_cw) == "UserRating"]<- "Nota"
+
+
+series_cw %>% 
+  group_by(Nome) %>%
+  summarise(numeroTemp = max(Temporada)) %>%
+  ggplot(aes(x = reorder(Nome, numeroTemp), y = numeroTemp)) + 
+  geom_bar(stat = "identity") +
+  labs(x="Nome da série",y="Número de temporadas", title = "Séries avaliadas") + 
+  scale_y_continuous(breaks=seq(0, 30, 1)) +
+  theme(legend.position = "none") +
+  theme_classic()
+```
+
+**Pergunta 1. Qual das séries que você escolheu é mais bem avaliada no IMDB? A diferença é grande? Pequena?**
+```{r echo = FALSE, message= FALSE} 
+avaliacao = series_cw %>%
+  ggplot(aes(x = Nome,y = Nota)) + 
+  geom_boxplot() + 
+  labs(x= "Nome da Série", y= "Nota do Usuário", title = "Avaliações de séries") + 
+  geom_jitter(width = .1, size = 1, alpha = .2) +  
+  stat_summary(aes(label=round(..y..,2)), fun.y=median, geom="text", size=4, vjust = -0.5, color = "black") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(breaks=seq(0, 10, 1)) +
+  theme_bw()
+ggplotly(avaliacao, width = 1000,height = 500)
+```
+</br> A partir do bloxplot com a mediana de cada série pode-se observar que, de forma geral,The Originals é a série mais bem avaliada no IMDB. Porém a maior nota foi dada para um episódio em Arrow. A segunda e terceira série mais bem avaliada respectivamente são Supernatural e Arrow.
+
+**Pergunta 2. As séries antigas são mais bem avaliadas que as novas?**
+
+Considerando a série mais antiga como a que possui mais temporada e a mais nova como a que possui menos, Supernatural é a série mais antiga em exibição na CW enquanto Crazy Ex-Girlfriend é a mais nova. A partir do boxplot mostrado acima (*Avaliações de Série*) é possível observar que a avaliação de Supernatural é maior que a série mais jovem. Isso pode indicar que os fãs da série são tão assíduos que a produtora não vê a necessidade de cancelar a série.
+
+**Pergunta 3. As notas crescem de acordo com a temporada?**
+```{r echo = FALSE, message= FALSE}
+cresc = series_cw %>%
+  group_by(Nome,Temporada) %>%
+  summarise(Mediana = median(Nota)) %>%
+  ggplot(aes(x = Temporada,y = Mediana, color = Nome)) + 
+  geom_point(alpha=.8) + 
+  geom_line() +
+  scale_x_continuous(breaks=seq(0, 13, 1)) +
+  scale_y_continuous(breaks=seq(6, 10, .5)) +
+  labs(x = "Temporada",y = "Mediana", title = "Notas por temporada") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+ggplotly(cresc, width = 1000,height = 500)
+  
+
+```
+
+De forma geral é possível perceber que apenas Supernatural e The Originals caíram de nota na última temporada. Supernatural teve sua nota quase igualada à de sua décima temporada e The Originals com a de sua segunda. Podemos considerar então a temporada antecedente da última como picos em avaliações. E a partir daí dizer que não há um padrão de crescimento mas as séries que ainda estão sendo produzidas não possuem sequências de quedas de avaliação significante.
