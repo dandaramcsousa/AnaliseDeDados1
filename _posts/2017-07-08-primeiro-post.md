@@ -59,7 +59,7 @@ series_filtradas %>%
   ggplot(aes(x = series_name,y = UserRating)) + geom_boxplot() + labs(title = "Avalição de séries do subconjunto", x= "Nome da Série", y= "Nota do Usuário")+ geom_jitter(width = .1, size = 1, alpha = .5, color = "purple")+  stat_summary(aes(label=round(..y..,2)), fun.y=median, geom="text", size=4, vjust = -0.5)
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-4](/figure/source/primeira-postagem/2017-07-08-primeiro-post/unnamed-chunk-4-1.png)
+![plot of chunk unnamed-chunk-4](../figure/source/primeira-postagem/2017-07-08-primeiro-post/unnamed-chunk-4-1.png)
 
 A partir do boxplot é possível observar que Sherlock é a série mais bem avaliada do nosso subconjunto, porém não fica distante das outras séries. A segunda colocada, por exemplo, é Mr Robot e está apenas 0.2 ponto abaixo da mais bem colocada. E a última colocada, Orphan Black está a 0.4 ponto abaixo de Sherlock. 
 
@@ -72,7 +72,7 @@ series_filtradas %>%
   ggplot(aes(x = series_name,y = UserRating)) + geom_boxplot() + labs(x= "Nome da Série", y= "Nota do Usuário")+ geom_jitter(width = .1, size = 1, alpha = .5, color = "purple") +  stat_summary(aes(label=round(..y..,2)), fun.y=median, geom="text", size=4, vjust = -0.5)
 {% endhighlight %}
 
-![plot of chunk unnamed-chunk-5](/figure/source/primeira-postagem/2017-07-08-primeiro-post/unnamed-chunk-5-1.png)
+![plot of chunk unnamed-chunk-5](../figure/source/primeira-postagem/2017-07-08-primeiro-post/unnamed-chunk-5-1.png)
 
 É possível perceber que Sherlock é a série com o maior boxplot. Isso indica que há uma maior variação de notas entre os episódios, ou seja, uma irregularidade. Orphan Black é a série que tem a mediana mais próxima ao meio do boxplot (e possui o menor dentre as séries analisdas) e pode ser considerada como a mais regular.
 
