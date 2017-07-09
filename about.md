@@ -4,8 +4,5 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
-
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+Olá,
+me chamo Dandara e este é um blog acerca das análise que foram feitas durante o 2017.1 de Computação - UFCG pela disciplina de Análise de Dados. Espero que goste e qualquer dúvida entre em contato comigo através do [meu e-mail](mailto:dandara.sousa@ccc.ufcg.edu.br).

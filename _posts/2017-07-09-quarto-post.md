@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Atividade 3 - Agrupamento em duas dimensões
-date: 2017-07-09 16:28:28
+date: 2017-07-09 16:39:28
 author: Dandara
 published: true
 tags: [htmlwidgets, r]
@@ -187,6 +187,6 @@ ggplotly(grupos_q, width = 800, height = 500)
 
 2. O segundo grupo é o de bilheteria alta. É o que tem a faixa de avaliação mais dispersa, por exemplo temos *Fun With Dick and Jane* que obteve cerca de 29% na avaliação e também *Dr Seuss' Horton Hears a Who!* que obteve 79% de aprovação. O que eles tem em comum é, na verdade a bilheteria próximo/acima de 100.
 
-3. O terceiro como o de bilheteria baixa e com avaliação mediana é formado apenas por *I Love You Philip Morris*.
+3. O terceiro como o de bilheteria baixa e com avaliação mediana é formado apenas por *I Love You Philip Morris*.  
 
 4. O último como o filme de bilheteria média mas com uma avaliação ótima é formado por *Under the Sea 3D* e *Eternal Sunshine Of The Spotless Mind* que tiveram avaliações parecidas,94% e 92% respectivamente.
