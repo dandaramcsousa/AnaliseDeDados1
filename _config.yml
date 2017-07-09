@@ -7,7 +7,7 @@ url: "https://dandaramcsousa.github.io/AnaliseDeDados1/" # the base hostname & p
 twitter_username: d4ndara
 github_username:  dandaramcsousa
 permalink: /:year/:month/:title.html
-baseurl: /AnaliseDeDados1/
+baseurl: /AnaliseDeDados1
 
 # Build settings
 markdown: kramdown
